@@ -4,8 +4,8 @@
 % Jim and Jenn are parents of Joe and Sally. 
 parent(jim,joe). 
 parent(jim,sally). 
-mother(jenn,joe).
-mother(jenn,sally).
+parent(jenn,joe).
+parent(jenn,sally).
 
 % Joe is father of Josh and Jeff. 
 parent(joe,josh).
