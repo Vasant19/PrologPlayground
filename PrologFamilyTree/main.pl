@@ -30,3 +30,5 @@ male(jeff).
 male(rob).
 female(jenn).
 female(sally).
+
+% Sibling/2: Determines if X is a sibling of Y.
