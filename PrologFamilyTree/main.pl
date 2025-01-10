@@ -21,3 +21,12 @@ grandparent(X, Z) :- parent(X, Y), parent(Y, Z).
 
 % grandchild/2: Determines if X is a grandchild of Z.
 grandchild(X, Z) :- parent(Z, Y), parent(Y, X).
+
+% male/1: Determines if a person is male , %female/1: Determines if a person is female.
+male(jim).
+male(joe).
+male(josh).
+male(jeff).
+male(rob).
+female(jenn).
+female(sally).
