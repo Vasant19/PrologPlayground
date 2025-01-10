@@ -16,3 +16,4 @@ parent(jeff,rob).
 
 % Everyone who has a child is educated.
 educated(X) :- parent(X, _).
+
