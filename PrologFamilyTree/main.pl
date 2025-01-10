@@ -15,4 +15,4 @@ parent(joe,jeff).
 parent(jeff,rob).
 
 % Everyone who has a child is educated.
-educated(X) :- parent(X, _); mother(X, _).
+educated(X) :- parent(X, _).
