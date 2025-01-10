@@ -2,14 +2,17 @@
 % Implenetation of Declarative programming and Setting Facts
 
 % Jim and Jenn are parents of Joe and Sally. 
-father(jim,joe). 
-father(jim,sally). 
+parent(jim,joe). 
+parent(jim,sally). 
 mother(jenn,joe).
 mother(jenn,sally).
 
 % Joe is father of Josh and Jeff. 
-father(joe,josh).
-father(joe,jeff).
+parent(joe,josh).
+parent(joe,jeff).
 
-% Jeff is parent of Rob.
-father(jeff,rob).
+% Jeff is father of Rob.
+parent(jeff,rob).
+
+% Everyone who has a child is educated.
+educated(X) :- parent(X, _); mother(X, _).
