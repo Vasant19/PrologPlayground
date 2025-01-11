@@ -9,9 +9,9 @@ This is a basic family tree program written in Prolog to manage and query relati
 - Query relationships like grandparent.
 - Simple and easy-to-use logic for family tree representation.
 
-## How to Run
 
-### In Prolog:
+
+### How to Run in Prolog:
 1. Install SWI-Prolog.
 2. Load the Prolog file:
    ```bash
