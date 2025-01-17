@@ -1,6 +1,6 @@
 % Debugging tracing and testing file for Prolog programs using 
 % trace. and notrace. commands for debugging 
-% guitracer. command for GUI debugging
+% guitracer. and  noguitracer. command for GUI debugging
 % mymember(X,L) is true if X is an element of list L
 
 
