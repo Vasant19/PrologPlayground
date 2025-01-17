@@ -1,4 +1,4 @@
-% Declaring Consumables and food items
+% Declaring Consumables and food items in Prolog 
 
 % vegetables/1 predicate (this will be 2 lines) that means its argument is a type of vegetable, and is true of the following: celery cucumber
 vegetables(celery).
