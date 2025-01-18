@@ -2,4 +2,10 @@
 % the first argument follows (appears immediately after in the alphabet) the second argument.
 % This predicate represents a relation that includes seven tuples
 
-follows()
+follows(b, a).
+follows(c, b).
+follows(d, c).
+follows(e, d).
+follows(f, e).
+follows(g, f).
+follows(h, g).
