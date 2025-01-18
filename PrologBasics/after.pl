@@ -15,6 +15,6 @@ follows(h, g).
 
 after(Y, X) :- follows(Y, X).
 
-% Define the recursive after/2 predicate.
+% Defination of the recursive after/2 predicate.
 after(Y, X) :- follows(Y, X).
 after(Y, X) :- follows(Z, X), after(Y, Z).
