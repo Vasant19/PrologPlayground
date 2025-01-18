@@ -10,3 +10,4 @@ mymember(H,[H|_]).
 
 % this second clause says that H is a member of the list if H is a member of the tail of the list
 mymember(H,[_|T]):- mymember(H,T).
+ 
