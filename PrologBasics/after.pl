@@ -9,3 +9,8 @@ follows(e, d).
 follows(f, e).
 follows(g, f).
 follows(h, g).
+
+% Implementation of a recursive after/2 predicate such that after(Y,X) is true of Y and X when
+% Y follows X , or if Y is after the letter that follows X.
+
+after(Y, X) :- follows(Y, X).
