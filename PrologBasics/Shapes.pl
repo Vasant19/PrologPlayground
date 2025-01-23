@@ -35,3 +35,9 @@ seg(X, Y) :-
 
 % Define triangle/3
 triangle(X,Y,Z):-
+  point(X1,Y1), point(X2,Y2), point(X3,Y3), % X, Y, and Z must be three points
+  X = point(X1,Y1),
+  Y = point(X2,Y2),
+  Z = point(X3,Y3),
+  dif(X,Y), dif(X,Z), dif(Y,Z). % X, Y, and Z must be different
+
