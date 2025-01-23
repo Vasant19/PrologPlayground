@@ -25,3 +25,10 @@ point(1, 4).
 point(2, 1).
 point(3, 3).
 point(4, 6).
+
+% Define seg/2
+seg(X, Y) :- 
+    point(X1, Y1), point(X2, Y2), % X and Y must be two points
+    X = point(X1, Y1),
+    Y = point(X2, Y2),
+    dif(X, Y). % X and Y must be different
