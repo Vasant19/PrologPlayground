@@ -15,3 +15,13 @@
   4. Develop a rectangle/2 predicate to identify valid rectangles formed by vertical segments.
   5. Perform queries to validate each predicate and demonstrate logical reasoning.
 */
+
+% a representation five different points in an X-Y grid of integers.
+% exactly two of the points have the same X-value.
+% no three points on the same line (no collinear points).
+% no two points have the same Y-value.
+point(1, 2).
+point(1, 4).
+point(2, 1).
+point(3, 3).
+point(4, 6).
