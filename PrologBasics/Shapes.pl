@@ -46,4 +46,10 @@ triangle(X,Y,Z):-
 % The bottom point of X is at the same level as the bottom point of Y
 % X and Y are the same length.  Given the above two bullets, this means the top point of X is at the same level as the top point of Y.  Do not actually calculate the length of line segments.
 
-rectangle(X,Y) :- point
+rectangle(X,Y) :- 
+ point(X1, Y1), point(X2, Y2), point(X3, Y3), point(X4, Y4),
+    X = (point(X1, Y1), point(X1, Y2)),  % X is a vertical line segment
+    Y = (point(X3, Y3), point(X3, Y4)),  % Y is a vertical line segment
+    dif(X1,X3),  % X and Y must be different line segments
+    Y1 = Y3,   % Bottom points are at the same level
+    Y2 = Y4.   % Top points are at the same level
