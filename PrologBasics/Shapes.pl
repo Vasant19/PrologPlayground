@@ -41,3 +41,9 @@ triangle(X,Y,Z):-
   Z = point(X3,Y3),
   dif(X,Y), dif(X,Z), dif(Y,Z). % X, Y, and Z must be different
 
+% Define rectangle/2
+% X and Y are both vertical (do not define a vertical predicate)
+% The bottom point of X is at the same level as the bottom point of Y
+% X and Y are the same length.  Given the above two bullets, this means the top point of X is at the same level as the top point of Y.  Do not actually calculate the length of line segments.
+
+rectangle(X,Y) :- point
