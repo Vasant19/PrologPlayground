@@ -35,3 +35,16 @@ move(B, From, To, S) :-
     poss(move(B, From, To), S).  % Ensure move is only executed when possible using Precondition axiom
 
 % Successor State Axiom that defines the state of the world after an action is executed
+
+% The block is now on the new location after moving
+on(Block, To, do(move(Block, From, To), S)) :-  
+    poss(move(Block, From, To), S).
+
+% The block is no longer at the old location
+\+ on(Block, From, do(move(Block, From, To), S)).
+
+% The previous location becomes clear
+clear(From, do(move(Block, From, To), S)).
+
+% The destination is no longer clear
+\+ clear(To, do(move(Block, From, To), S)).
