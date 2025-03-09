@@ -71,3 +71,19 @@ move(B, From, To, S, S_new) :-
     % 3. Block B becomes clear because nothing is on top of it.
     assert(clear(From, S_new)),
     assert(clear(B, S_new)).
+
+
+% plan(Goal, Plan) is true when Goal is satisfied and Plan is the sequence of actions to reach the goal.
+plan(Goal, Plan) :-
+    bposs(Plan),       % Ensure the plan is valid
+    Goal.              % Goal is satisfied in the final situation
+
+% bposs(Plan) finds a valid plan of actions (breadth-first search).
+bposs(Plan) :-
+    tryposs([], Plan).
+
+% tryposs(History, Plan) finds a sequence of actions (breadth-first search).
+tryposs(History, Plan) :-
+    poss(Action, _),         % Check if an action is possible in the current state
+    \+ member(Action, History), % Avoid repeating actions
+    tryposs([Action|History], Plan).   % Recursively try actions
