@@ -5,6 +5,9 @@
 % Initially, Block a is on Position 1, Block b is on Position 3, and Block c is on Block a.
 % The robot has the ability to move a clear block from its current position to a new clear position or a new clear block
 
+% Hanlding discontiguous predicates as they are defined in different parts of the code
+:- discontiguous on/3.
+:- discontiguous clear/2.
 
 % The State of the world
 % Fluent: on(Block, Object/Position, Situation)
@@ -24,6 +27,7 @@ clear(p4, s).  % Position 4 is empty/clear
 % Precondition Axiom that states under which condition is action possible
 % poss(Action, Situation) - Defines when an action is possible in a given situation S
 poss(move(B, From, To), S) :-  
+    block(B),               % The block must be a block
     clear(B, S),            % The block itself must be clear  
     clear(To, S),           % The destination must be clear  
     on(B, From, S),         % The block must actually be on From  
@@ -35,16 +39,3 @@ move(B, From, To, S) :-
     poss(move(B, From, To), S).  % Ensure move is only executed when possible using Precondition axiom
 
 % Successor State Axiom that defines the state of the world after an action is executed
-
-% The block is now on the new location after moving
-on(Block, To, do(move(Block, From, To), S)) :-  
-    poss(move(Block, From, To), S).
-
-% The block is no longer at the old location
-\+ on(Block, From, do(move(Block, From, To), S)).
-
-% The previous location becomes clear
-clear(From, do(move(Block, From, To), S)).
-
-% The destination is no longer clear
-\+ clear(To, do(move(Block, From, To), S)).
