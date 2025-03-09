@@ -40,10 +40,10 @@ poss(move(B, From, To), S) :-
     clear(B, S),            % The block itself must be clear  
     (place(To); block(To)), % The destination must be a place or a block
     dif(B, To),             % A block cannot move onto itself  
-    dif(From, To).          % A block must move to a different location 
+    dif(From, To),          % A block must move to a different location 
     clear(To, S),           % The destination must be clear
     (place(From); block(From)), % The source must be a place or a block
-    on(B, From, S),         % The block must actually be on From  
+    on(B, From, S).     % The block must actually be on From  
  
 
 % move(B, From, To, Situation): Moves Clear block "B" from "From" current position to "To" in Situation "S"
@@ -56,9 +56,18 @@ move(B, From, To, S) :-
 move(B, From, To, S, S_new) :-
     poss(move(B, From, To), S),  % Ensure the move is possible
     % Remove the block from its current position
-    retract(on(B, From, S)),
-    assert(on(B, To, S_new)),
-    % Update the "clear" facts
-    retract(clear(From, S)),  % The "From" place is no longer clear
-    assert(clear(To, S_new)),  % The "To" place is now clear
-    assert(clear(B, S_new)).   % The block is no longer clear, as it is on the new place
+    retract(on(B, From, S)), % Remove the block from its current position
+    assert(on(B, To, S_new)), % Add the block to the new position
+    
+    % Update the clear facts:
+
+    % Remove the old clear facts from state S for the source and destination.
+    retract(clear(From, S)),
+    retract(clear(To, S)),
+    
+    % In the new state S_new:
+    % 1. The source (From) becomes clear since block B has left.
+    % 2. The destination (To) is now occupied by B, so we do not assert clear(To, S_new).
+    % 3. Block B becomes clear because nothing is on top of it.
+    assert(clear(From, S_new)),
+    assert(clear(B, S_new)).
