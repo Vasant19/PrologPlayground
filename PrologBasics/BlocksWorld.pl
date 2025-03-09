@@ -10,18 +10,28 @@
 :- discontiguous clear/2.
 
 % The State of the world
+
+block(a).
+block(b).
+block(c).
+
+place(1).
+place(2).
+place(3).
+place(4).
+
 % Fluent: on(Block, Object/Position, Situation)
 % Fluent: clear(Object/Position, Situation)
 % Initial positions of blocks in situation s
-on(a, p1, s).  % Block a is on Position 1
-on(b, p3, s).  % Block b is on Position 3
+on(a, 1, s).  % Block a is on Position 1
+on(b, 3, s).  % Block b is on Position 3
 on(c, a, s).   % Block c is on Block a
 
 % Clear positions and blocks in situation s
 clear(b, s).   % Block b has nothing on top
 clear(c, s).   % Block c has nothing on top
-clear(p2, s).  % Position 2 is empty/clear
-clear(p4, s).  % Position 4 is empty/clear
+clear(2, s).  % Position 2 is empty/clear
+clear(4, s).  % Position 4 is empty/clear
 
 
 % Precondition Axiom that states under which condition is action possible
