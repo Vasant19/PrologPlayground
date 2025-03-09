@@ -7,8 +7,8 @@
 
 
 % The State of the world
-% Fluent: on(Block, Object, Situation)
-
+% Fluent: on(Block, Object/Position, Situation)
+% Fluent: clear(Object/Position, Situation)
 % Initial positions of blocks in situation s
 on(a, p1, s).  % Block a is on Position 1
 on(b, p3, s).  % Block b is on Position 3
@@ -20,13 +20,15 @@ clear(c, s).   % Block c has nothing on top
 clear(p2, s).  % Position 2 is empty/clear
 clear(p4, s).  % Position 4 is empty/clear
 
+
+% Precondition Axiom that states under which condition is action possible
 % poss(Action, Situation) - Defines when an action is possible in a given situation S
 poss(move(B, From, To), S) :-  
-    clear(B, S),        % The block itself must be clear  
+    clear(B, S),            % The block itself must be clear  
     clear(To, S),           % The destination must be clear  
-    on(B, From, S),     % The block must actually be on From  
-    dif(B, To),            % A block cannot move onto itself  
-    dif(From, To).             % A block must move to a different location  
+    on(B, From, S),         % The block must actually be on From  
+    dif(B, To),             % A block cannot move onto itself  
+    dif(From, To).          % A block must move to a different location  
 
 % move_to(B, From, To, Situation): Moves Clear block "B" from "From" current position to "To" in Situation "S"
 move(B, From, To, S) :-  
