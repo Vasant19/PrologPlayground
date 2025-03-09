@@ -33,3 +33,5 @@ poss(move(B, From, To), S) :-
 % move_to(B, From, To, Situation): Moves Clear block "B" from "From" current position to "To" in Situation "S"
 move(B, From, To, S) :-  
     poss(move(B, From, To), S).  % Ensure move is only executed when possible using Precondition axiom
+
+% Successor State Axiom that defines the state of the world after an action is executed
