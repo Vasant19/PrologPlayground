@@ -33,19 +33,32 @@ clear(c, s).   % Block c has nothing on top
 clear(2, s).  % Position 2 is empty/clear
 clear(4, s).  % Position 4 is empty/clear
 
-
 % Precondition Axiom that states under which condition is action possible
 % poss(Action, Situation) - Defines when an action is possible in a given situation S
 poss(move(B, From, To), S) :-  
     block(B),               % The block must be a block
     clear(B, S),            % The block itself must be clear  
-    clear(To, S),           % The destination must be clear  
-    on(B, From, S),         % The block must actually be on From  
+    (place(To); block(To)), % The destination must be a place or a block
     dif(B, To),             % A block cannot move onto itself  
-    dif(From, To).          % A block must move to a different location  
+    dif(From, To).          % A block must move to a different location 
+    clear(To, S),           % The destination must be clear
+    (place(From); block(From)), % The source must be a place or a block
+    on(B, From, S),         % The block must actually be on From  
+ 
 
-% move_to(B, From, To, Situation): Moves Clear block "B" from "From" current position to "To" in Situation "S"
+% move(B, From, To, Situation): Moves Clear block "B" from "From" current position to "To" in Situation "S"
 move(B, From, To, S) :-  
     poss(move(B, From, To), S).  % Ensure move is only executed when possible using Precondition axiom
 
 % Successor State Axiom that defines the state of the world after an action is executed
+
+% Successor state: Update the world after a move
+move(B, From, To, S, S_new) :-
+    poss(move(B, From, To), S),  % Ensure the move is possible
+    % Remove the block from its current position
+    retract(on(B, From, S)),
+    assert(on(B, To, S_new)),
+    % Update the "clear" facts
+    retract(clear(From, S)),  % The "From" place is no longer clear
+    assert(clear(To, S_new)),  % The "To" place is now clear
+    assert(clear(B, S_new)).   % The block is no longer clear, as it is on the new place
