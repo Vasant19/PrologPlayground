@@ -6,6 +6,9 @@
 % The robot has the ability to move a clear block from its current position to a new clear position or a new clear block
 
 % Hanlding discontiguous predicates as they are defined in different parts of the code
+% The dynamic directive is used to declare that the predicate is dynamic, i.e., it can be modified at runtime.
+:- dynamic on/3.
+:- dynamic clear/2.
 :- discontiguous on/3.
 :- discontiguous clear/2.
 
@@ -62,8 +65,8 @@ move(B, From, To, S, S_new) :-
     % Update the clear facts:
 
     % Remove the old clear facts from state S for the source and destination.
-    retract(clear(From, S)),
-    retract(clear(To, S)),
+    retractall(clear(From, S)),
+    retractall(clear(To, S)),
     
     % In the new state S_new:
     % 1. The source (From) becomes clear since block B has left.
@@ -73,3 +76,19 @@ move(B, From, To, S, S_new) :-
     assert(clear(B, S_new)).
 
 
+% Sample queries to check the implementation of the block world domain
+
+% Check intial state of the world
+% on(a, 1, s). % true.
+% clear(2, s).
+
+
+% test possiblity of a move 
+% poss(move(a, 1, 2), s). % false.
+% poss(move(b, 3, 4), s). % true.
+
+% Peform a move
+% move(b, 3, 4, s, S_new).
+
+% Verify moved
+% on(b, 4, S_new). % true.
