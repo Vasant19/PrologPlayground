@@ -92,3 +92,9 @@ move(B, From, To, S, S_new) :-
 
 % Verify moved
 % on(b, 4, S_new). % true.
+
+
+
+% Planning 
+
+plan(Goal,Plan):-bposs(Plan),Goal.
