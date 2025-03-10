@@ -95,6 +95,7 @@ move(B, From, To, S, S_new) :-
 
 
 
-% Planning 
+%----------------------------------------
+% PLANNING SECTION
+%----------------------------------------
 
-plan(Goal,Plan):-bposs(Plan),Goal.
