@@ -63,3 +63,51 @@ move_block(Block, From, To) :-
     
     % Print the move for debugging
     format('Moved block ~w from ~w to ~w~n', [Block, From, To]).
+
+% ---------------------------
+% Planning Procedure:
+% plan(Goal, Plan) is true if Plan (an action history) leads to a state where Goal is true.
+% For simplicity, we use a naive breadth-first search for sequences of actions.
+% ---------------------------
+% --- Modified Planning Section ---
+
+% Define which moves are relevant based on the Goal.
+% For example, if the goal is on(a, _, []), then only moves involving a or c are considered.
+relevant_move(Goal, Block) :-
+    Goal = on(a, _, []),
+    (Block = a ; Block = c).
+
+% A planning-specific wrapper for poss/1 that filters moves by relevance.
+poss_plan(Goal, [move(Block, From, To)]) :-
+    poss([move(Block, From, To)]),
+    relevant_move(Goal, Block).
+
+% Revised Planning Procedure: Depth-Limited Search using poss_plan/2.
+plan(Goal, Plan) :-
+    between(0, 5, Depth),
+    depth_plan(Goal, Plan, Depth).
+
+depth_plan(Goal, [], _) :-
+    call(Goal).
+
+depth_plan(Goal, [move(Block, From, To) | Rest], Depth) :-
+    Depth > 0,
+    poss_plan(Goal, [move(Block, From, To)]),
+    move_block(Block, From, To),
+    NewDepth is Depth - 1,
+    depth_plan(Goal, Rest, NewDepth).
+% ---------------------------
+% Goal States (in terms of fluents):
+%
+% To move Block a to Position 2:
+%    The goal is: on(a, 2, []).
+%
+% To move Block a to Position 3:
+%    The goal is: on(a, 3, []).
+%
+% (These goals express that in the final state, block a is at the desired position.)
+% ---------------------------
+
+% Example queries:
+% ?- plan(on(a,2,[]), Plan).
+% ?- plan(on(a,3,[]), Plan).
