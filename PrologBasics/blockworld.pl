@@ -69,10 +69,9 @@ move_block(Block, From, To) :-
 % plan(Goal, Plan) is true if Plan (an action history) leads to a state where Goal is true.
 % For simplicity, we use a naive breadth-first search for sequences of actions.
 % ---------------------------
-% --- Modified Planning Section ---
 
 % Define which moves are relevant based on the Goal.
-% For example, if the goal is on(a, _, []), then only moves involving a or c are considered.
+% if the goal is on(a, _, []), then only moves involving a or c are considered.
 relevant_move(Goal, Block) :-
     Goal = on(a, _, []),
     (Block = a ; Block = c).
@@ -82,7 +81,7 @@ poss_plan(Goal, [move(Block, From, To)]) :-
     poss([move(Block, From, To)]),
     relevant_move(Goal, Block).
 
-% Revised Planning Procedure: Depth-Limited Search using poss_plan/2.
+% Planning Procedure: Depth-Limited Search using poss_plan/2.
 plan(Goal, Plan) :-
     between(0, 5, Depth),
     depth_plan(Goal, Plan, Depth).
