@@ -26,28 +26,26 @@ place(4).
 % Fluent: on(Block, Object/Position, Situation)
 % Fluent: clear(Object/Position, Situation)
 % Initial positions of blocks in situation s
-on(a, 1, s).  % Block a is on Position 1
-on(b, 3, s).  % Block b is on Position 3
-on(c, a, s).   % Block c is on Block a
+on(a, 1, []).  % Block a is on Position 1
+on(b, 3, []).  % Block b is on Position 3
+on(c, a, []).   % Block c is on Block a
 
 % Clear positions and blocks in situation s
-clear(b, s).   % Block b has nothing on top
-clear(c, s).   % Block c has nothing on top
-clear(2, s).  % Position 2 is empty/clear
-clear(4, s).  % Position 4 is empty/clear
+clear(b, []).   % Block b has nothing on top
+clear(c, []).   % Block c has nothing on top
+clear(2, []).  % Position 2 is empty/clear
+clear(4, []).  % Position 4 is empty/clear
 
 % Precondition Axiom that states under which condition is action possible
 % poss(Action, Situation) - Defines when an action is possible in a given situation S
-poss(move(B, From, To), S) :-  
+poss([move(B, From, To)|S]) :-  
     block(B),               % The block must be a block
     clear(B, S),            % The block itself must be clear  
     (place(To); block(To)), % The destination must be a place or a block
     dif(B, To),             % A block cannot move onto itself  
-    dif(From, To),          % A block must move to a different location 
     clear(To, S),           % The destination must be clear
     (place(From); block(From)), % The source must be a place or a block
     on(B, From, S).     % The block must actually be on From  
- 
 
 % move(B, From, To, Situation): Moves Clear block "B" from "From" current position to "To" in Situation "S"
 move(B, From, To, S) :-  
