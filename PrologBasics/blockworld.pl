@@ -19,27 +19,36 @@ place(3).
 place(4).
 
 % Fluents 
+% clear(Block, [])
+% Block is clear in the initial state which is a list of actions that are empty.
 clear(2 , []).
 clear(4 , []).
 clear(b , []).
 clear(c , []).
+
+% on(Block, Position, []) 
+% Block is on Position in the initial state which is a list of actions that are empty. 
 
 on(a,1,[]).
 on(b,3,[]).
 on(c,a,[]).
 
 % Precondition Axiom
+% poss([move(Block,From,To)])
+% A move is possible if the block is clear, the block is not on the same position as the destination, the destination is clear, and the block is on the source position.
 poss([move(Block,From,To)]):-
-  block(Block),
-  clear(Block,[]),
-  (place(To);block(To)),
-  Block \= To,
-  clear(To,[]),
-  (place(From);block(From)),
-  on(Block,From,[]).
+    block(Block),
+    clear(Block,[]),
+    (place(To);block(To)),
+    Block \= To,
+    clear(To,[]),
+    (place(From);block(From)),
+    on(Block,From,[]).
 
 
 % Successor Axiom - What happens when we move a block
+% move_block(Block, From, To)
+% Move a block from one position to another
 move_block(Block, From, To) :-
     % Check if the move is possible
     poss([move(Block, From, To)]),
