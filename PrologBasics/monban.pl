@@ -89,7 +89,6 @@ tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
 
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Queries to test the program
 % 1. initial_state(State).
