@@ -16,13 +16,6 @@
 % D: monkey has or not the bananas (has, hasnot)
 
 % Defining objects in the domain
-place(middle).
-place(at_door).
-place(at_window).
-
-box_position(middle).
-box_position(at_door).
-box_position(at_window).
 
 % The monkey is an agent
 monkey(monkey).
@@ -30,57 +23,27 @@ monkey(monkey).
 % The box is an object
 box(box).
 
-% The bananas exist
-bananas(bananas).
-
+monkeyplace(middle).
+monkeyplace(at_door).
+monkeyplace(at_window).
 % Possible monkey positions
-monkeyposition(on_floor).
-monkeyposition(on_box).
+monkeyverticalposition(on_floor).
+monkeyverticalposition(on_box).
+
+box_position(middle).
+box_position(at_door).
+box_position(at_window).
 
 % Possible banana possession states
 possession(has).
 possession(has_not).
 
 
-% Action: Move
-% A move is possible if the monkey is on the floor and the box is at the same location
-poss([move(Monkey, From, To) | S]) :-
-    monkey(Monkey),                     % Should be a monkey
-    place(From),                        % 'From' must be a valid place
-    place(To),                          % 'To' must be a valid place
-    monkeyposition(on_floor),           % Monkey must be on the floor to move  
-    From \= To.                 % Monkey must move from one place to another
-    possession(has_not).                % The monkey must not have the bananas
-
-% Action: Climb
-% A climb is possible if the monkey is on the floor and the box is at the same location
-poss([climb(Monkey, Box) | S]) :-
-    monkey(Monkey),                     % Should be a monkey
-    box(Box),                           % The must interact with a box
-    box_position(Box),                  % The box must be at a valid location
-    possession(has_not),                % The monkey must not have the bananas
-
-% Action: Push
-% A push is possible if the monkey is on the floor and the box is at the same location
-poss([push(Monkey, From, To) | S]) :-
-    monkey(Monkey),                     % Should be a monkey
-    place(From),                        % The 'From' place must be valid
-    place(To),                          % The 'To' place must be valid
-    box(Box),                           % The monkey must interact with a box
-    box_position(From),                 % The box must be at the 'From' location
-    From \= To,                         % The 'From' and 'To' locations must 
-    
-
-% Action: Grab
-% A grab is possible if the monkey is on the box and does not have the bananas
-poss([grab(Monkey) | S]) :-
-    monkey(Monkey),                     % The agent is a monkey
-    possession(has_not).                % The monkey must not have the bananas
-
-% Actions: action/3 where (Postconditions, Action, Preconditions)
+% Actions: action/3 where (Successor Axioms, Action, Precondition Axioms)
 % Action: grab
 % The monkey can grab the bananas only if it is on the box and in the correct location.
-monkey_state(state(middle, on_box, middle, has), [grab|S]) :-
+monkey_state(state(middle, on_box, middle, has), 
+[grab|S]) :-
     monkey_state(state(middle, on_box, middle, has_not), S).
 
 % Action: climb
