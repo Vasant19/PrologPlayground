@@ -16,7 +16,6 @@
 % D: monkey has or not the bananas (has, hasnot)
 
 % Defining objects in the domain
-% Possible locations in the world
 place(middle).
 place(at_door).
 place(at_window).
@@ -43,65 +42,85 @@ possession(has).
 possession(has_not).
 
 
-% Actions AND states
-% action(Precondition Axioms, Action, Successor Axioms)
-% Action 1: Monkey can grab the bananas if it is on the box and does not have the bananas
-move(state(middle , on_box, middle , has_not),
-grab,
-state(middle, on_box, middle, has)).
+% Action: Move
+% A move is possible if the monkey is on the floor and the box is at the same location
+poss([move(Monkey, From, To) | S]) :-
+    monkey(Monkey),                     % Should be a monkey
+    place(From),                        % 'From' must be a valid place
+    place(To),                          % 'To' must be a valid place
+    monkeyposition(on_floor),           % Monkey must be on the floor to move  
+    From \= To.                 % Monkey must move from one place to another
+    possession(has_not).                % The monkey must not have the bananas
 
-% Action 2: Monkey can climb on the box if it is on the floor and the box is in the same location
-move(state(P, on_floor, P, H),
-climb,
-state(P, on_box, P, H)).
+% Action: Climb
+% A climb is possible if the monkey is on the floor and the box is at the same location
+poss([climb(Monkey, Box) | S]) :-
+    monkey(Monkey),                     % Should be a monkey
+    box(Box),                           % The must interact with a box
+    box_position(Box),                  % The box must be at a valid location
+    possession(has_not),                % The monkey must not have the bananas
 
-% Action 3: Monkey can push the box to a location if it is on the floor and the box is in the same location
-move(state(P1, on_floor, P1, H), 
-push(P1, P2),
-state(P2, on_floor, P2, H)).
+% Action: Push
+% A push is possible if the monkey is on the floor and the box is at the same location
+poss([push(Monkey, From, To) | S]) :-
+    monkey(Monkey),                     % Should be a monkey
+    place(From),                        % The 'From' place must be valid
+    place(To),                          % The 'To' place must be valid
+    box(Box),                           % The monkey must interact with a box
+    box_position(From),                 % The box must be at the 'From' location
+    From \= To,                         % The 'From' and 'To' locations must 
+    
 
-% Action 4: Monkey can walk to a location if it is on the floor
-move(state(P1, on_floor, B, H),
-walk(P1, P2),
-state(P2, on_floor, B, H)).
+% Action: Grab
+% A grab is possible if the monkey is on the box and does not have the bananas
+poss([grab(Monkey) | S]) :-
+    monkey(Monkey),                     % The agent is a monkey
+    possession(has_not).                % The monkey must not have the bananas
 
-% Initial State: Monkey is at the middle, on the floor, box is in the middle, 
-% and monkey does not have bananas
-initial_state(state(at_door, on_floor, middle, has_not)).
+% Actions: action/3 where (Postconditions, Action, Preconditions)
+% Action: grab
+% The monkey can grab the bananas only if it is on the box and in the correct location.
+monkey_state(state(middle, on_box, middle, has), [grab|S]) :-
+    monkey_state(state(middle, on_box, middle, has_not), S).
 
-% Goal state
-% the monkey should have the bananas in the end no matter where it is or where the box is
+% Action: climb
+% The monkey climbs onto the box if it is on the floor and the box is at the same location.
+monkey_state(state(P, on_box, P, H), 
+[climb|S]) :-
+    monkey_state(state(P, on_floor, P, H), S).
 
-% to see increasing length of plan, use query plan(true,S).
-plan(Goal,Plan):-
-    bposs(Plan),Goal.
+% Action: push
+% The monkey pushes the box from location P1 to P2 when on the floor.
+monkey_state(state(P2, on_floor, P2, H), 
+[push(P1, P2)|S]) :-
+    monkey_state(state(P1, on_floor, P1, H), S).
 
-% Start the process of checking possible plans
-bposs(S) :- tryposs([],S).
+% Action: walk
+% The monkey walks from location P1 to P2 while remaining on the floor.
+monkey_state(state(P2, on_floor, B, H), 
+[walk(P1, P2)|S]) :-
+    monkey_state(state(P1, on_floor, B, H), S).
 
-% tryposs(S,S) :- poss(S).
-% % If the plan is valid, print it
-tryposs(S,S) :- poss(S),write(S).   % print the plan so far
+% The Initial State: monkey is at the door, on the floor, box is athe the middle and has not the bananas.
+monkey_state(state(at_door, on_floor, middle, has_not), []).
 
-%% If the plan is not yet complete, try adding more actions to it
-tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
+% --- Planning Section ---
+% The plan/2 predicate generates a plan (a list of actions)
+% that, when “read” via monkey_state/2, yields a state matching the goal pattern.
+plan(goal(StatePattern), Plan) :-
+    bposs(Plan),
+    monkey_state(State, Plan),
+    State = StatePattern,
+    write('Plan found: '), write(Plan), nl.
 
+% bposs/1 starts with an empty plan and gradually “increases” its length.
+bposs(S) :-
+    tryposs([], S).
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Queries to test the program
-% 1. initial_state(State).
-
-% Check if the monkey can climb on the box
-% 2. move(state(at_door, on_floor, at_door, has_not), climb, NewState).
-
-% Check if the monkey can grab the bananas
-% 3. move(state(middle, on_box, middle, has_not), grab, NewState).
-
-% Check if the monkey can push the box
-% 4. move(state(at_door, on_floor, at_door, has_not), push(at_door, middle), NewState).
-
-% Check if the monkey can walk to a location
-% 5. move(state(at_door, on_floor, middle, has_not), walk(at_door, at_window), NewState).
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% tryposs(CurrentPlan, Plan) succeeds when the plan is complete.
+tryposs(S, S) :-
+    monkey_state(_, S),
+    write('Current plan: '), write(S), nl.
+% Otherwise, extend the plan by one (anonymous) action and try again.
+tryposs(X, S) :-
+    tryposs([_|X], S).
