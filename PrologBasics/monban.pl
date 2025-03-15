@@ -42,7 +42,9 @@ monkeyposition(on_box).
 possession(has).
 possession(has_not).
 
-% Actions
+
+% Actions AND states
+% action(Precondition Axioms, Action, Successor Axioms)
 % Action 1: Monkey can grab the bananas if it is on the box and does not have the bananas
 move(state(middle , on_box, middle , has_not),
 grab,
@@ -63,21 +65,12 @@ move(state(P1, on_floor, B, H),
 walk(P1, P2),
 state(P2, on_floor, B, H)).
 
-% Goal state
-% the monkey should have the bananas in the end no matter where it is or where the box is
-goal(state(_,_,_,has)).
-
-goal(State1) :- move(State1,Move, State2), goal(State2).
-
-
 % Initial State: Monkey is at the middle, on the floor, box is in the middle, 
 % and monkey does not have bananas
 initial_state(state(at_door, on_floor, middle, has_not)).
 
-
-
-
-
+% Goal state
+% the monkey should have the bananas in the end no matter where it is or where the box is
 
 % to see increasing length of plan, use query plan(true,S).
 plan(Goal,Plan):-
@@ -92,14 +85,6 @@ tryposs(S,S) :- poss(S),write(S).   % print the plan so far
 
 %% If the plan is not yet complete, try adding more actions to it
 tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
-
-
-
-
-
-
-
-
 
 
 
