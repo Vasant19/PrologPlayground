@@ -42,26 +42,22 @@ possession(has_not).
 % Actions: action/3 where (Successor Axioms, Action, Precondition Axioms)
 % Action: grab
 % The monkey can grab the bananas only if it is on the box and in the correct location.
-monkey_state(state(middle, on_box, middle, has), 
-[grab|S]) :-
+monkey_state(state(middle, on_box, middle, has), [grab|S]) :-
     monkey_state(state(middle, on_box, middle, has_not), S).
 
 % Action: climb
 % The monkey climbs onto the box if it is on the floor and the box is at the same location.
-monkey_state(state(P, on_box, P, H), 
-[climb|S]) :-
+monkey_state(state(P, on_box, P, H), [climb|S]) :-
     monkey_state(state(P, on_floor, P, H), S).
 
 % Action: push
 % The monkey pushes the box from location P1 to P2 when on the floor.
-monkey_state(state(P2, on_floor, P2, H), 
-[push(P1, P2)|S]) :-
+monkey_state(state(P2, on_floor, P2, H), [push(P1, P2)|S]) :-
     monkey_state(state(P1, on_floor, P1, H), S).
 
 % Action: walk
 % The monkey walks from location P1 to P2 while remaining on the floor.
-monkey_state(state(P2, on_floor, B, H), 
-[walk(P1, P2)|S]) :-
+monkey_state(state(P2, on_floor, B, H), [walk(P1, P2)|S]) :-
     monkey_state(state(P1, on_floor, B, H), S).
 
 % The Initial State: monkey is at the door, on the floor, box is athe the middle and has not the bananas.
@@ -87,3 +83,15 @@ tryposs(S, S) :-
 % Otherwise, extend the plan by one (anonymous) action and try again.
 tryposs(X, S) :-
     tryposs([_|X], S).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Queries to test the program
+% 1) Check initial state
+% ?- monkey_state(state(at_door, on_floor, middle, has_not), []).
+
+
+% *) FINAL TEST 
+% ?- plan(goal(state(_,_,_,has)), Plan).
+% ?- plan(goal(state(_, _, at_window, has_not)), Plan).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
