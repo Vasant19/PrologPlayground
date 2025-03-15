@@ -42,23 +42,11 @@ monkeyposition(on_box).
 possession(has).
 possession(has_not).
 
-
-
-
-
-% Initial State: Monkey is at the middle, on the floor, box is in the middle, 
-% and monkey does not have bananas
-state(atdoor, on_floor, middle, has_not)
-
 % Actions
-% move predicate(Preconditions, Action, Postconditions)
-move(State1, Move, State2).
-
 % Action 1: Monkey can grab the bananas if it is on the box and does not have the bananas
 move(state(middle , on_box, middle , has_not),
 grab,
 state(middle, on_box, middle, has)).
-
 
 % Action 2: Monkey can climb on the box if it is on the floor and the box is in the same location
 move(state(P, onfloor, P, H),
@@ -78,3 +66,29 @@ state(P2, onfloor, B, H)).
 % Goal state
 % the monkey should have the bananas in the end no matter where it is or where the box is
 goal(state(_,_,_,has)).
+
+goal(State1) :- move(State1,Move, State2), goal(State2).
+
+
+% Initial State: Monkey is at the middle, on the floor, box is in the middle, 
+% and monkey does not have bananas
+initial_state(state(at_door, on_floor, middle, has_not)).
+
+
+
+
+
+
+% to see increasing length of plan, use query plan(true,S).
+plan(Goal,Plan):-
+    bposs(Plan),Goal.
+
+% Start the process of checking possible plans
+bposs(S) :- tryposs([],S).
+
+% tryposs(S,S) :- poss(S).
+% % If the plan is valid, print it
+tryposs(S,S) :- poss(S),write(S).   % print the plan so far
+
+%% If the plan is not yet complete, try adding more actions to it
+tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
