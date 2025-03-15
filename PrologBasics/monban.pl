@@ -86,7 +86,7 @@ tryposs(X, S) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Queries to test the program
-% 1) Check initial state
+%  Check initial state
 % ?- monkey_state(state(at_door, on_floor, middle, has_not), []).
 
 
