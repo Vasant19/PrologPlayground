@@ -105,7 +105,7 @@ tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Queries to test the program
 % 1. initial_state(State).
 
@@ -120,3 +120,4 @@ tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
 
 % Check if the monkey can walk to a location
 % 5. move(state(at_door, on_floor, middle, has_not), walk(at_door, at_window), NewState).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
