@@ -49,19 +49,19 @@ grab,
 state(middle, on_box, middle, has)).
 
 % Action 2: Monkey can climb on the box if it is on the floor and the box is in the same location
-move(state(P, onfloor, P, H),
+move(state(P, on_floor, P, H),
 climb,
-state(P, onbox, P, H)).
+state(P, on_box, P, H)).
 
 % Action 3: Monkey can push the box to a location if it is on the floor and the box is in the same location
-move(state(P1, onfloor, P1, H), 
+move(state(P1, on_floor, P1, H), 
 push(P1, P2),
-state(P2, onfloor, P2, H)).
+state(P2, on_floor, P2, H)).
 
 % Action 4: Monkey can walk to a location if it is on the floor
-move(state(P1, onfloor, B, H),
+move(state(P1, on_floor, B, H),
 walk(P1, P2),
-state(P2, onfloor, B, H)).
+state(P2, on_floor, B, H)).
 
 % Goal state
 % the monkey should have the bananas in the end no matter where it is or where the box is
@@ -92,3 +92,31 @@ tryposs(S,S) :- poss(S),write(S).   % print the plan so far
 
 %% If the plan is not yet complete, try adding more actions to it
 tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+% Queries to test the program
+% 1. initial_state(State).
+
+% Check if the monkey can climb on the box
+% 2. move(state(at_door, on_floor, at_door, has_not), climb, NewState).
+
+% Check if the monkey can grab the bananas
+% 3. move(state(middle, on_box, middle, has_not), grab, NewState).
+
+% Check if the monkey can push the box
+% 4. move(state(at_door, on_floor, at_door, has_not), push(at_door, middle), NewState).
+
+% Check if the monkey can walk to a location
+% 5. move(state(at_door, on_floor, middle, has_not), walk(at_door, at_window), NewState).
