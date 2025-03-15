@@ -60,7 +60,7 @@ monkey_state(state(P2, on_floor, P2, H), [push(P1, P2)|S]) :-
 monkey_state(state(P2, on_floor, B, H), [walk(P1, P2)|S]) :-
     monkey_state(state(P1, on_floor, B, H), S).
 
-% The Initial State: monkey is at the door, on the floor, box is athe the middle and has not the bananas.
+% The Initial State: monkey is at the door, on the floor, box is at the middle and has not the bananas.
 monkey_state(state(at_door, on_floor, middle, has_not), []).
 
 % --- Planning Section ---
@@ -89,8 +89,13 @@ tryposs(X, S) :-
 %  Check initial state
 % ?- monkey_state(state(at_door, on_floor, middle, has_not), []).
 
+% ?- Check actions 
+% ?- monkey_state(state(middle, on_box, middle, has), [grab, climb, walk(at_door, middle)]).
+
 
 % *) FINAL TEST 
+% Program can produce a plan for the monkey to grab the bananas, 
+% in other words, has_bananas(y,S) is true for some sequence of actions S.
 % ?- plan(goal(state(_,_,_,has)), Plan).
 % ?- plan(goal(state(_, _, at_window, has_not)), Plan).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
