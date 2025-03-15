@@ -11,7 +11,7 @@
 
 % state(A,B,C,D)
 % A: horizontal location of monkey (middle, atdoor, atwindow)
-% B: vertical ocation of monkey (onfloor, onbox)
+% B: vertical Location of monkey (onfloor, onbox)
 % C: position of box (middle, atdoor, atwindow)
 % D: monkey has or not the bananas (has, hasnot)
 
@@ -42,7 +42,7 @@ monkeyposition(on_box).
 possession(has).
 possession(has_not).
 
-move(State1, Action, State2).
+
 
 
 
@@ -50,7 +50,30 @@ move(State1, Action, State2).
 % and monkey does not have bananas
 state(atdoor, on_floor, middle, has_not)
 
+% Actions
+% move predicate(Preconditions, Action, Postconditions)
+move(State1, Move, State2).
 
+% Action 1: Monkey can grab the bananas if it is on the box and does not have the bananas
+move(state(middle , on_box, middle , has_not),
+grab,
+state(middle, on_box, middle, has)).
+
+
+% Action 2: Monkey can climb on the box if it is on the floor and the box is in the same location
+move(state(P, onfloor, P, H),
+climb,
+state(P, onbox, P, H)).
+
+% Action 3: Monkey can push the box to a location if it is on the floor and the box is in the same location
+move(state(P1, onfloor, P1, H), 
+push(P1, P2),
+state(P2, onfloor, P2, H)).
+
+% Action 4: Monkey can walk to a location if it is on the floor
+move(state(P1, onfloor, B, H),
+walk(P1, P2),
+state(P2, onfloor, B, H)).
 
 % Goal state
 % the monkey should have the bananas in the end no matter where it is or where the box is
