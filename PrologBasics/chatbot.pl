@@ -1,4 +1,5 @@
 % Initial implementation of a simple chatbot in Prolog 
+
 talk(Sentence ,Reply):- 
     %parse the sentence
     parse(Sentence, LF, Type),
