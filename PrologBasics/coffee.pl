@@ -11,13 +11,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% Simplified action representation
+% Simplified action representation to make planning easier and time-efficient
 % 1) get_cup() - Open cupboard, take cup, place on counter
 % 2) fill_kettle() - Fill kettle with water, plug it in, wait for it to boil
 % 3) pour_water() - Wait for water to boil, pour hot water into cup
 % 4) add_coffee - Add instant coffee to cup
 % 5) stir() - Stir the coffee to complete the process
 
+
+% Domain objects and their possible positions in order to fully represent the environment for your actions and fluents
+object(cup).    % The cup is an object
+object(kettle). % The kettle is an object
+object(robot).  % The robot is an object
+
 % Initial state of the world
-get_cup(n,[]).
-fill_kettle(n,[]).
+at(cup, cupboard, []).         % The cup is in the cupboard initially
+at(kettle, counter, []).       % The kettle is on the counter initially
+at(robot, counter, []).        % The robot is at the counter initially
+
+plugged_in(kettle, n, []).     % The kettle is not plugged in initially
+filled(kettle, n, []).         % The kettle has no water initially
+boiled(water, n, []).          % The water is not boiled initially
+contains(cup, n, []).          % The cup is empty initially
+stirred(cup, n, []).           % Initially, the coffee is not stirred, and is also the final state (goal state).
