@@ -25,6 +25,8 @@ object(kettle). % The kettle is an object
 object(robot).  % The robot is an object
 object(hot_water).  % The water is an object
 object(coffee). % The coffee is an object
+object(hot_water_and_coffee).  % The cup can contain both hot water and coffee
+
 
 % Optional we can introduce a move action : place(far_from_counter). % The robot can be far from the counter
 place(counter). % The object can be on the counter or near the counter
@@ -120,5 +122,18 @@ contains(cup, Curr_Contents, [A|S]) :-
     contains(cup, Curr_Contents, S),
     A \= pour_water.
 
+% Action 5 - add_coffee()
+% Precondition axiom: The cup must contain hot water, the robot must be at the counter, and the coffee must be available
+poss(add_coffee, S) :- 
+    contains(cup, hot_water, S),
+    at(robot, counter, S),
+    object(coffee).  
 
+% Successor axiom: After adding coffee, the cup contains both hot water and coffee
+contains(cup, hot_water_and_coffee, [add_coffee|S]) :- 
+    poss(add_coffee, S).
 
+% The cup stays as it was unless coffee is added
+contains(cup, Curr_Contents, [A|S]) :-  
+    contains(cup, Curr_Contents, S),
+    A \= add_coffee.
