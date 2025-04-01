@@ -23,6 +23,8 @@
 object(cup).    % The cup is an object
 object(kettle). % The kettle is an object
 object(robot).  % The robot is an object
+object(hot_water).  % The water is an object
+object(coffee). % The coffee is an object
 
 % Optional we can introduce a move action : place(far_from_counter). % The robot can be far from the counter
 place(counter). % The object can be on the counter or near the counter
@@ -35,7 +37,7 @@ at(robot, counter, []).        % The robot is at the counter initially
 
 plugged_in(kettle, n, []).     % The kettle is not plugged in initially
 filled(kettle, n, []).         % The kettle has no water initially
-boiled(water, n, []).          % The water is not boiled initially
+boiled(kettle, n, []).          % The water is not boiled initially
 contains(cup, n, []).          % The cup is empty initially
 stirred(cup, n, []).           % Initially, the coffee is not stirred, and is also the final state (goal state).
 
