@@ -154,3 +154,24 @@ stirred(cup, Curr_State, [A|S]) :-
     stirred(cup, Curr_State, S),
     A \= stir_coffee.
 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Planning Section
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% to see increasing length of plan, use query plan(true,S).
+plan(Goal,Plan):-
+    bposs(Plan),Goal.
+
+% Start the process of checking possible plans
+bposs(S) :- tryposs([],S).
+
+% tryposs(S,S) :- poss(S).
+% % If the plan is valid, print it
+tryposs(S,S) :- poss(S),write(S).   % print the plan so far
+
+%% If the plan is not yet complete, try adding more actions to it
+tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
+
