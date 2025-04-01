@@ -121,16 +121,6 @@ poss(boil_kettle, S) :-
 boiled(kettle, y, [boil_kettle|S]) :- 
     poss(boil_kettle, S).
 
-% Kettle plugged_in status persists
-plugged_in(kettle, Val, [A|S]) :- 
-    A \= fill_kettle,
-    plugged_in(kettle, Val, S).
-
-% Kettle filled status persists
-filled(kettle, Val, [A|S]) :-
-    A \= fill_kettle,
-    filled(kettle, Val, S).
-
 % Kettle boiled status persists
 boiled(kettle, Val, [A|S]) :-
     A \= boil_kettle,
@@ -220,10 +210,10 @@ satisfies_goal(S) :-
 % ?- poss(fill_kettle, [get_cup]).
 
 % 3) Can the robot boil the kettle?
-% ?- poss(boil_kettle, [get_cup, fill_kettle]).
+% ?- poss(boil_kettle, [fill_kettle, get_cup]).
 
 % 4) Can the robot pour water into the cup?
-% ?- poss(pour_water, [get_cup, fill_kettle, boil_kettle]).
+% ?- poss(pour_water, [boil_kettle, fill_kettle, get_cup]).
 
 % 5) Can the robot make a plan to stir the coffee and achieve the goal?
 % ?- plan(stirred(cup, y, []), Plan).
