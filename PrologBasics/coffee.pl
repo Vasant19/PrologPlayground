@@ -215,9 +215,15 @@ satisfies_goal(S) :-
 %% Final queries %% 
 % 1) Can the robot get the cup?
 % ?- poss(get_cup, []).
+
 % 2) Can the robot fill the kettle?
 % ?- poss(fill_kettle, [get_cup]).
+
 % 3) Can the robot boil the kettle?
 % ?- poss(boil_kettle, [get_cup, fill_kettle]).
+
 % 4) Can the robot pour water into the cup?
 % ?- poss(pour_water, [get_cup, fill_kettle, boil_kettle]).
+
+% 5) Can the robot make a plan to stir the coffee and achieve the goal?
+% ?- plan(stirred(cup, y, []), Plan).
