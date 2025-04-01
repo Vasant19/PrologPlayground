@@ -19,6 +19,16 @@
 % 5) add_coffee - Add instant coffee to cup
 % 6) stir() - Stir the coffee to complete the process
 
+% discontiguous declarations
+:- discontiguous poss/2.
+:- discontiguous at/3.
+:- discontiguous plugged_in/3.
+:- discontiguous filled/3.
+:- discontiguous boiled/3.
+:- discontiguous contains/3.
+:- discontiguous stirred/3.
+
+
 % Domain objects and their possible positions in order to fully represent the environment for your actions and fluents
 object(cup).    % The cup is an object
 object(kettle). % The kettle is an object
@@ -156,22 +166,26 @@ stirred(cup, Curr_State, [A|S]) :-
 
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Planning Section
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% to see increasing length of plan, use query plan(goal..).
+% Plan goal and sequence of actions
+% Plan to achieve a goal (Goal) by finding a valid sequence of actions (Plan)
+plan(Goal, Plan) :- 
+    bposs([], Plan, Goal).
 
-% to see increasing length of plan, use query plan(true,S).
-plan(Goal,Plan):-
-    bposs(Plan),Goal.
+% Base case: If the goal holds in the current state, stop planning.
+bposs(S, S, Goal) :- 
+    call(Goal).  
 
-% Start the process of checking possible plans
-bposs(S) :- tryposs([],S).
+% Recursive case: Find a valid action and extend the plan.
+bposs(S, [Action | NewS], Goal) :- 
+    poss(Action, S),               % Check if action is possible in state S
+    result(Action, S, NextState),   % Get the new state after performing Action
+    not(member(Action, S)),         % Avoid repeating actions
+    bposs([Action | S], NewS, Goal).  % Continue planning with updated state
 
-% tryposs(S,S) :- poss(S).
-% % If the plan is valid, print it
-tryposs(S,S) :- poss(S),write(S).   % print the plan so far
-
-%% If the plan is not yet complete, try adding more actions to it
-tryposs(X,S) :- tryposs([_|X],S).   %plan gets longer
-
+% Result of applying an action
+result(Action, S, [Action | S]) :- 
+    poss(Action, S).
