@@ -19,7 +19,9 @@
 % 5) add_coffee - Add instant coffee to cup
 % 6) stir() - Stir the coffee to complete the process
 
-% discontiguous declarations
+%------------------------------------------------------
+% Discontiguous declarations
+%------------------------------------------------------
 :- discontiguous poss/2.
 :- discontiguous at/3.
 :- discontiguous plugged_in/3.
@@ -28,164 +30,194 @@
 :- discontiguous contains/3.
 :- discontiguous stirred/3.
 
+%------------------------------------------------------
+% Domain objects and places
+%------------------------------------------------------
+object(cup).
+object(kettle).
+object(robot).
+object(hot_water).
+object(coffee).
+object(hot_water_and_coffee).
 
-% Domain objects and their possible positions in order to fully represent the environment for your actions and fluents
-object(cup).    % The cup is an object
-object(kettle). % The kettle is an object
-object(robot).  % The robot is an object
-object(hot_water).  % The water is an object
-object(coffee). % The coffee is an object
-object(hot_water_and_coffee).  % The cup can contain both hot water and coffee
+place(counter).
+place(cupboard).
 
-
-% Optional we can introduce a move action : place(far_from_counter). % The robot can be far from the counter
-place(counter). % The object can be on the counter or near the counter
-place(cupboard). % The cupboard is a place too.
-
+%------------------------------------------------------
 % Initial state of the world
-at(cup, cupboard, []).         % The cup is in the cupboard initially
-at(kettle, counter, []).       % The kettle is on the counter initially
-at(robot, counter, []).        % The robot is at the counter initially
+%------------------------------------------------------
+at(cup, cupboard, []).
+at(kettle, counter, []).
+at(robot, counter, []).
 
-plugged_in(kettle, n, []).     % The kettle is not plugged in initially
-filled(kettle, n, []).         % The kettle has no water initially
-boiled(kettle, n, []).          % The water is not boiled initially
-contains(cup, n, []).          % The cup is empty initially
-stirred(cup, n, []).           % Initially, the coffee is not stirred, and is also the final state (goal state).
+plugged_in(kettle, n, []).
+filled(kettle, n, []).
+boiled(kettle, n, []).
+contains(cup, n, []).
+stirred(cup, n, []). % Also the goal state => stirred(cup, y, []).
 
-% Action 1 - get_cup()
-% Precondition axiom : The cup must be in the cupboard and the robot must be near the counter too
+% The kettle remains at the counter
+at(kettle, Pos, [A|S]) :- 
+    at(kettle, Pos, S).
+
+% The robot remains at the counter
+at(robot, Pos, [A|S]) :- 
+    at(robot, Pos, S).
+
+%------------------------------------------------------
+% Define available actions in the domain
+%------------------------------------------------------
+action(get_cup).
+action(fill_kettle).
+action(boil_kettle).
+action(pour_water).
+action(add_coffee).
+action(stir_coffee).
+
+%------------------------------------------------------
+% Action 1: get_cup
+% Preconditions: The cup is in the cupboard and the robot is at the counter.
+% Successor: The cup moves to the counter.
+% Persistence: The cup remains at the counter.
+%------------------------------------------------------
 poss(get_cup, S) :- 
     at(cup, cupboard, S), 
     at(robot, counter, S).
 
-% Successor axiom
-% After getting the cup, it's on the counter
 at(cup, counter, [get_cup|S]) :- 
     poss(get_cup, S).
 
-% The cup stays where it was unless moved
-at(cup, Curr_Pos, [A|S]) :-  
-    at(cup, Curr_Pos, S),
-    A \= get_cup.
+at(cup, Pos, [A|S]) :- 
+    A \= get_cup,   % cup moved only by get_cup
+    at(cup, Pos, S).
 
 
-
-% Action 2 - fill_kettle()
-% Precondition axiom : The kettle must be on the counter and the robot must be there too , and the cup is on the counter
+%------------------------------------------------------
+% Action 2: fill_kettle
+% Preconditions: The cup and kettle are on the counter and the robot is there.
+% Successor: The kettle becomes plugged in and filled.
+%------------------------------------------------------
 poss(fill_kettle, S) :- 
     at(cup, counter, S),
     at(kettle, counter, S), 
     at(robot, counter, S).
 
-% Successor axiom
-% Plugging in the kettle.
 plugged_in(kettle, y, [fill_kettle|S]) :- 
     poss(fill_kettle, S).
 
-% Filled kettle: After filling, the kettle is filled with water
 filled(kettle, y, [fill_kettle|S]) :- 
     poss(fill_kettle, S).
 
-% Ensure that the kettle stays filled unless explicitly changed
-filled(kettle, y, [A|S]) :-  
-    filled(kettle, y, S),
-    A \= fill_kettle.
-
-
-
-
-
-% Action 3 - boil_kettle()
-% Precondition axiom: Kettle must be filled and plugged in
+%------------------------------------------------------
+% Action 3: boil_kettle
+% Preconditions: The kettle is filled and plugged in, and the robot is at the counter.
+% Successor: The kettle becomes boiled.
+%------------------------------------------------------
 poss(boil_kettle, S) :- 
     filled(kettle, y, S),
     plugged_in(kettle, y, S),
     at(robot, counter, S).
 
-% Successor axioms:
-% Boiling the water
 boiled(kettle, y, [boil_kettle|S]) :- 
     poss(boil_kettle, S).
 
-% Ensure the kettle stays boiled 
-boiled(kettle, y, [A|S]) :-  
-    boiled(kettle, y, S),
-    A \= boil_kettle.
+% Kettle plugged_in status persists
+plugged_in(kettle, Val, [A|S]) :- 
+    A \= fill_kettle,
+    plugged_in(kettle, Val, S).
 
+% Kettle filled status persists
+filled(kettle, Val, [A|S]) :-
+    A \= fill_kettle,
+    filled(kettle, Val, S).
 
+% Kettle boiled status persists
+boiled(kettle, Val, [A|S]) :-
+    A \= boil_kettle,
+    boiled(kettle, Val, S).
 
-% Action 4 - pour_water()
-% Precondition axiom: The kettle must be boiled, the robot must be at the counter, and the cup must be empty
+%------------------------------------------------------
+% Action 4: pour_water
+% Preconditions: The kettle is boiled, the robot and cup are at the counter, and the cup is empty.
+% Successor: The cup gets filled with hot water.
+%------------------------------------------------------
 poss(pour_water, S) :- 
     boiled(kettle, y, S),
     at(robot, counter, S),
     at(cup, counter, S),
-    contains(cup, n, S).   % Cup should be empty before pouring
+    contains(cup, n, S).
 
-% Successor axiom: After pouring, the cup contains hot water
 contains(cup, hot_water, [pour_water|S]) :- 
     poss(pour_water, S).
 
-% The cup stays as it was unless poured into
-contains(cup, Curr_Contents, [A|S]) :-  
-    contains(cup, Curr_Contents, S),
-    A \= pour_water.
-
-% Action 5 - add_coffee()
-% Precondition axiom: The cup must contain hot water, the robot must be at the counter, and the coffee must be available
+%------------------------------------------------------
+% Action 5: add_coffee
+% Preconditions: The cup contains hot water, the robot is at the counter, and coffee is available.
+% Successor: The cup then contains both hot water and coffee.
+%------------------------------------------------------
 poss(add_coffee, S) :- 
     contains(cup, hot_water, S),
     at(robot, counter, S),
-    object(coffee).  
+    object(coffee).
 
-% Successor axiom: After adding coffee, the cup contains both hot water and coffee
 contains(cup, hot_water_and_coffee, [add_coffee|S]) :- 
     poss(add_coffee, S).
 
-% The cup stays as it was unless coffee is added
-contains(cup, Curr_Contents, [A|S]) :-  
-    contains(cup, Curr_Contents, S),
-    A \= add_coffee.
+% Cup contents persist (changed only by pour_water or add_coffee)
+contains(cup, Val, [A|S]) :-
+    A \= pour_water,
+    A \= add_coffee,
+    contains(cup, Val, S).
 
-% Action 6 - stir_coffee()
-% Precondition: The cup must contain hot water and coffee, not yet stirred, and the robot must be at the counter
+%------------------------------------------------------
+% Action 6: stir_coffee
+% Preconditions: The cup contains hot water and coffee, it has not been stirred yet, and the robot is at the counter.
+% Successor: The coffee is stirred.
+%------------------------------------------------------
 poss(stir_coffee, S) :- 
     contains(cup, hot_water_and_coffee, S),
     stirred(cup, n, S),
     at(robot, counter, S).
 
-% Successor axiom: After stirring, the cup is stirred
 stirred(cup, y, [stir_coffee|S]) :- 
     poss(stir_coffee, S).
 
-% Persistence: The stirred state persists unless changed by an action
-stirred(cup, Curr_State, [A|S]) :-  
-    stirred(cup, Curr_State, S),
-    A \= stir_coffee.
+% Stirred status persists (changed only by stir_coffee)
+stirred(cup, Val, [A|S]) :-
+    A \= stir_coffee,
+    stirred(cup, Val, S).
+%------------------------------------------------------
+% Planning predicates
+%------------------------------------------------------
+plan(Goal, Plan) :-
+    bposs(Plan, Goal).
 
+% Start the planning process
+bposs(S, Goal) :- tryposs([], S, Goal).
 
+% If the goal is reached, output the plan (the plan is built in reverse order)
+tryposs(S, S, _Goal) :- 
+    satisfies_goal(S),
+    !,
+    write('Plan found: '), write(S), nl.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Planning Section
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% to see increasing length of plan, use query plan(goal..).
-% Plan goal and sequence of actions
-% Plan to achieve a goal (Goal) by finding a valid sequence of actions (Plan)
-plan(Goal, Plan) :- 
-    bposs([], Plan, Goal).
+% Otherwise, try expanding the plan with a valid action
+tryposs(X, S, Goal) :- 
+    action(A),
+    poss(A, X),
+    \+ member(A, X),
+    tryposs([A|X], S, Goal).
 
-% Base case: If the goal holds in the current state, stop planning.
-bposs(S, S, Goal) :- 
-    call(Goal).  
+% Define the goal: the cup must be stirred (stirred(cup, y, S) holds)
+satisfies_goal(S) :- 
+    stirred(cup, y, S).
 
-% Recursive case: Find a valid action and extend the plan.
-bposs(S, [Action | NewS], Goal) :- 
-    poss(Action, S),               % Check if action is possible in state S
-    result(Action, S, NextState),   % Get the new state after performing Action
-    not(member(Action, S)),         % Avoid repeating actions
-    bposs([Action | S], NewS, Goal).  % Continue planning with updated state
-
-% Result of applying an action
-result(Action, S, [Action | S]) :- 
-    poss(Action, S).
+%% Final queries %% 
+% 1) Can the robot get the cup?
+% ?- poss(get_cup, []).
+% 2) Can the robot fill the kettle?
+% ?- poss(fill_kettle, [get_cup]).
+% 3) Can the robot boil the kettle?
+% ?- poss(boil_kettle, [get_cup, fill_kettle]).
+% 4) Can the robot pour water into the cup?
+% ?- poss(pour_water, [get_cup, fill_kettle, boil_kettle]).
