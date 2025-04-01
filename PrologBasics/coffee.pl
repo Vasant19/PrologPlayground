@@ -57,11 +57,11 @@ contains(cup, n, []).
 stirred(cup, n, []). % Also the goal state => stirred(cup, y, []).
 
 % The kettle remains at the counter
-at(kettle, Pos, [A|S]) :- 
+at(kettle, Pos, [_|S]) :- 
     at(kettle, Pos, S).
 
 % The robot remains at the counter
-at(robot, Pos, [A|S]) :- 
+at(robot, Pos, [_|S]) :- 
     at(robot, Pos, S).
 
 %------------------------------------------------------
