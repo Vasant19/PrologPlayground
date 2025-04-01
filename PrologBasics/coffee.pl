@@ -137,3 +137,20 @@ contains(cup, hot_water_and_coffee, [add_coffee|S]) :-
 contains(cup, Curr_Contents, [A|S]) :-  
     contains(cup, Curr_Contents, S),
     A \= add_coffee.
+
+% Action 6 - stir_coffee()
+% Precondition: The cup must contain hot water and coffee, not yet stirred, and the robot must be at the counter
+poss(stir_coffee, S) :- 
+    contains(cup, hot_water_and_coffee, S),
+    stirred(cup, n, S),
+    at(robot, counter, S).
+
+% Successor axiom: After stirring, the cup is stirred
+stirred(cup, y, [stir_coffee|S]) :- 
+    poss(stir_coffee, S).
+
+% Persistence: The stirred state persists unless changed by an action
+stirred(cup, Curr_State, [A|S]) :-  
+    stirred(cup, Curr_State, S),
+    A \= stir_coffee.
+
