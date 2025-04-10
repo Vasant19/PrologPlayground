@@ -8,15 +8,24 @@
 % Cut in prolog is non-logical.
 % It is used to control backtracking in Prolog.
 % Arithetic is non-logical.
-
+% Closed world assumption (CWA) is non-logical.
 
 % Question: Given a Domain, Axiomatize the domain.
 
 % Question: Convert to CNF
-% ∀x∃y (for all x, there exists a y)
+% ∀x∃y P(x,y) (for all x, there exists a y)
 % Step 1: Eliminate Implications
 % Step 2: Move Negation Inwards
 % Step 3: Standardize Variables apart
 % Step 4: Skolemize existentials
 % Step 5: Move Universal Quantifiers Outwards
 % Step 6: Distribute "and" ^ over "or" v
+
+
+% Answer Step1: There are no implications in the expression.
+% Answer Step2: There are no negations in the expression.
+% Answer Step3: There are no variables to standardize apart. No repeated quantifiers with conflicting variable names, so no need to rename.
+% Answer Step4: We eliminate ∃y existensial quantifier by replacing it with a Skolem function. Since ∃y is inside the scope of ∀x, we use a Skolem function of x, say f(x). => ∀x P(x,f(x))
+% Answer Step5: This is already in the form ∀x (something), so it’s fine. In CNF, we usually drop the ∀ (assume everything is universally quantified by default). => P(x, f(x))
+% Answer Step6: This is already in CNF, as it is a single predicate. CNF requires the expression to be a conjunction of disjunctions, but a single predicate is trivially in CNF. No ∧ or ∨ to distribute. 
+% => P(x, f(x))
