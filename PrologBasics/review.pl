@@ -11,3 +11,12 @@
 
 
 % Question: Given a Domain, Axiomatize the domain.
+
+% Question: Convert to CNF
+% ∀x∃y (for all x, there exists a y)
+% Step 1: Eliminate Implications
+% Step 2: Move Negation Inwards
+% Step 3: Standardize Variables apart
+% Step 4: Skolemize existentials
+% Step 5: Move Universal Quantifiers Outwards
+% Step 6: Distribute "and" ^ over "or" v
