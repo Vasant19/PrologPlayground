@@ -29,3 +29,14 @@
 % Answer Step5: This is already in the form ∀x (something), so it’s fine. In CNF, we usually drop the ∀ (assume everything is universally quantified by default). => P(x, f(x))
 % Answer Step6: This is already in CNF, as it is a single predicate. CNF requires the expression to be a conjunction of disjunctions, but a single predicate is trivially in CNF. No ∧ or ∨ to distribute. 
 % => P(x, f(x))
+
+
+% mymember recursive function
+% mymember(X,L) means that X is an item in List L.
+mymember(X, [X|_]). % base case: X is the head of the list
+mymember(X, [_|T]) :- mymember(X, T). % X is in the tail of the list
+
+% sum of a list
+% sum(L, S) means that S is the sum of the elements in list L.
+sum([], 0). % basecase: The sum of an empty list is 0
+sum([H|T], S) :- sum(T, S1), S is H + S1. % recursive case: The sum of a list is the head plus the sum of the tail
