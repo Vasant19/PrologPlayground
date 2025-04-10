@@ -1,5 +1,10 @@
 % Pure Logic vs Non-logical 
-% Prolog is a logic programming language that is based on formal logic.
 
+%%%%%%% Pure Logical %%%%%%%%%%
+% Prolog is a logic programming language that is based on formal logic.
+% Order does not matter in pure logic.
+
+%%%%%%% Non-Logical %%%%%%%%%%
 % Cut in prolog is non-logical.
 % It is used to control backtracking in Prolog.
+% Arith
