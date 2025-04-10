@@ -7,4 +7,7 @@
 %%%%%%% Non-Logical %%%%%%%%%%
 % Cut in prolog is non-logical.
 % It is used to control backtracking in Prolog.
-% Arith
+% Arithetic is non-logical.
+
+
+% Question: Given a Domain, Axiomatize the domain.
